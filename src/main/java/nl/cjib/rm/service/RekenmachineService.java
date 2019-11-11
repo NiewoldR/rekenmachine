@@ -20,7 +20,6 @@ class RekenmachineService {
 
     public double som(List<String> somList) {
         while (somList.contains("(")) {
-            System.out.println(somList);
 
             List<String> somTussenHaakjes = new ArrayList<>();
             int startpunt = somList.lastIndexOf("(");
@@ -29,10 +28,8 @@ class RekenmachineService {
             for (int i = startpunt + 1; i < eindpunt; i++) {
                 somTussenHaakjes.add(somList.get(i));
             }
-            for (int i = eindpunt; i > startpunt; i--) {
-                somList.remove(i);
-                System.out.println(somList);
-
+            if (eindpunt >= startpunt + 1) {
+                somList.subList(startpunt + 1, eindpunt + 1).clear();
             }
 
 
@@ -61,7 +58,7 @@ class RekenmachineService {
             somList.remove(indexOfOperator + 1);
             somList.remove(indexOfOperator);
         }
-        System.out.println(somList);
+
         while (somList.contains("+") || somList.contains("-")) {
             int indexOfOperator;
             if (somList.contains("+") && !somList.contains("-") || somList.contains("+") && somList.indexOf("+") < somList.indexOf("-")) {

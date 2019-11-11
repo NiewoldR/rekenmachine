@@ -1,6 +1,5 @@
 package nl.cjib.rm;
 
-import nl.cjib.rm.model.Rekenmachine;
 import nl.cjib.rm.service.RekenmachineService;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +12,6 @@ public class Input {
 
     private RekenmachineService rekenmachineService;
 
-    private Rekenmachine rekenmachine;
-
     public Input(RekenmachineService rekenmachineService) {
         this.rekenmachineService = rekenmachineService;
     }
@@ -24,31 +21,32 @@ public class Input {
 
     String rekenmachine() {
 
-        String som = invoerOmzettenInSom();
+        String somInvoer = invoerOmzettenInSom();
 
-        while (!som.equals("stop")) {
-            if (som.equals("historie")) {
+        while (!somInvoer.equals("stop")) {
+            if (somInvoer.equals("historie")) {
                 System.out.println(String.join("\n", rekenmachineService.getHistorie()));
-            } else if (som.equals("help")) {
+            } else if (somInvoer.equals("help")) {
                 System.out.println(String.join("\n", rekenmachineService.getHelp()));
 
 
             } else {
-                rekenmachine = somVerwerken(som);
-
-
                 try {
-                    double uitkomst = rekenmachineService.som(rekenmachine.getSomList());
+                    if (vallideInvoer(somInvoer).length() > 0) {
+                        throw new Exception("Illegale invoer, uw som: " + somInvoer + " bevat de volgende illegale charater(s): " + vallideInvoer(somInvoer));
+                    }
+
+                    double uitkomst = rekenmachineService.som(somInvoerVerwerken(somInvoer));
                     System.out.println(uitkomst);
                     rekenmachineService.addHistorieUitkomst(uitkomst);
 
 
                 } catch (Exception e) {
-                    System.out.println(e.getMessage() + " voer uw som opnieuw in:");
+                    System.out.println(e.getMessage() + " Voer uw som opnieuw in:");
                 }
 
             }
-            som = invoerOmzettenInSom();
+            somInvoer = invoerOmzettenInSom();
         }
         return "Bedankt voor het gebruiken van de Rekenmachine";
     }
@@ -67,7 +65,7 @@ public class Input {
     }
 
 
-    private Rekenmachine somVerwerken(String som) {
+    private List<String> somInvoerVerwerken(String som) {
         List<String> somList = new ArrayList<>();
         StringBuilder tempGetal = new StringBuilder();
 
@@ -99,7 +97,6 @@ public class Input {
             } else if (tempChar == '(') {
                 somList.add(som.substring(i, i + 1));
             } else {
-                System.out.println(tempGetal.length());
                 if (tempGetal.length() > 0) {
                     somList.add(tempGetal.toString());
                 }
@@ -114,12 +111,19 @@ public class Input {
         }
 
 
-        return new Rekenmachine.RekenmachineBuilder(somList, tempGetal).build();
+        return somList;
+
+    }
+
+    private String vallideInvoer(String som) {
+        return som.replaceAll("[0-9wsct^*/+()\\-.]", "");
 
     }
 
 
 }
+
+
 
 
 
