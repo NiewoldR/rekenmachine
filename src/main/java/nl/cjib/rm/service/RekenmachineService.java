@@ -19,33 +19,25 @@ class RekenmachineService {
 
 
     public double som(List<String> somList) {
-//        while (somList.contains("(")) {
-//            List<String> somTussenHaakjes = new ArrayList<>();
-//            int startpunt = somList.lastIndexOf("(");
-//            somTussenHaakjes.add(somList.get(startpunt));
-//            int eindpunt = somList.indexOf(")");
-//
-//            for (int i = startpunt + 1; i <= eindpunt; i++) {
-//                somTussenHaakjes.add(somList.get(i));
-//                somTussenHaakjes.add(somList.get(i));
-//                System.out.println(somTussenHaakjes);
-//                System.out.println(somTussenHaakjes);
-//            }
-//
-//            somList.set(startpunt, "" + som(somTussenHaakjes));
-//            if (eindpunt < 3){
-//                eindpunt = 3;
-//            }
-//            for (int i = eindpunt;i > 0 ; i--){
-//                somList.remove(startpunt);
-//                System.out.println(somList);
-//            }
-//
-//            for (int i = eindpunt - 2;i > 0 ; i--){
-//                somList.remove(startpunt+1);
-//                System.out.println(somList);
-//            }
-//        }
+        while (somList.contains("(")) {
+            System.out.println(somList);
+
+            List<String> somTussenHaakjes = new ArrayList<>();
+            int startpunt = somList.lastIndexOf("(");
+            int eindpunt = somList.indexOf(")");
+
+            for (int i = startpunt + 1; i < eindpunt; i++) {
+                somTussenHaakjes.add(somList.get(i));
+            }
+            for (int i = eindpunt; i > startpunt; i--) {
+                somList.remove(i);
+                System.out.println(somList);
+
+            }
+
+
+            somList.set(startpunt, "" + som(somTussenHaakjes));
+        }
 
 
         while (somList.contains("^")) {
@@ -69,6 +61,7 @@ class RekenmachineService {
             somList.remove(indexOfOperator + 1);
             somList.remove(indexOfOperator);
         }
+        System.out.println(somList);
         while (somList.contains("+") || somList.contains("-")) {
             int indexOfOperator;
             if (somList.contains("+") && !somList.contains("-") || somList.contains("+") && somList.indexOf("+") < somList.indexOf("-")) {

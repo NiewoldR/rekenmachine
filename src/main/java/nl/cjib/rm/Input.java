@@ -22,7 +22,7 @@ public class Input {
     private Scanner scanner = new Scanner(System.in);
 
 
-    public String rekenmachine() {
+    String rekenmachine() {
 
         String som = invoerOmzettenInSom();
 
@@ -30,7 +30,7 @@ public class Input {
             if (som.equals("historie")) {
                 System.out.println(String.join("\n", rekenmachineService.getHistorie()));
             } else if (som.equals("help")) {
-                System.out.println(String.join("\n",rekenmachineService.getHelp()));
+                System.out.println(String.join("\n", rekenmachineService.getHelp()));
 
 
             } else {
@@ -81,8 +81,10 @@ public class Input {
             } else if (tempChar == '-') {
                 if (i == 0) {
                     tempGetal.append(tempChar);
-                } else if (Character.isDigit(som.charAt(i - 1)) && Character.isDigit(som.charAt(i + 1)) || som.charAt(i + 1) == '-') {
-                    somList.add(tempGetal.toString());
+                } else if (Character.isDigit(som.charAt(i - 1)) || som.charAt(i - 1) == ')' && Character.isDigit(som.charAt(i + 1)) || som.charAt(i + 1) == '-') {
+                    if (tempGetal.length() > 0) {
+                        somList.add(tempGetal.toString());
+                    }
                     somList.add(som.substring(i, i + 1));
                     tempGetal = new StringBuilder();
 
@@ -94,17 +96,23 @@ public class Input {
                 tempGetal = new StringBuilder();
                 tempGetal.append(wiskundeUitkomst);
 
-            } else if (tempChar == '(' || tempChar == ')') {
+            } else if (tempChar == '(') {
                 somList.add(som.substring(i, i + 1));
             } else {
-                somList.add(tempGetal.toString());
+                System.out.println(tempGetal.length());
+                if (tempGetal.length() > 0) {
+                    somList.add(tempGetal.toString());
+                }
                 somList.add(som.substring(i, i + 1));
                 tempGetal = new StringBuilder();
             }
 
         }
         rekenmachineService.addHistorieSom(som);
-        somList.add(tempGetal.toString());
+        if (tempGetal.length() > 0) {
+            somList.add(tempGetal.toString());
+        }
+
 
         return new Rekenmachine.RekenmachineBuilder(somList, tempGetal).build();
 
