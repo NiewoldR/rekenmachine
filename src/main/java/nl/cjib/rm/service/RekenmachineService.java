@@ -19,21 +19,29 @@ class RekenmachineService {
 
 
     public double som(List<String> somList) {
+
         while (somList.contains("(")) {
 
             List<String> somTussenHaakjes = new ArrayList<>();
             int startpunt = somList.lastIndexOf("(");
-            int eindpunt = somList.indexOf(")");
+            int eindpunt = startpunt;
+
+            while (!somList.get(eindpunt).equals(")")) {
+                eindpunt += 1;
+            }
 
             for (int i = startpunt + 1; i < eindpunt; i++) {
                 somTussenHaakjes.add(somList.get(i));
             }
-            if (eindpunt >= startpunt + 1) {
                 somList.subList(startpunt + 1, eindpunt + 1).clear();
-            }
+
 
 
             somList.set(startpunt, "" + som(somTussenHaakjes));
+        }
+
+        if (somList.contains(")")) {
+            throw new IndexOutOfBoundsException();
         }
 
 
@@ -47,7 +55,8 @@ class RekenmachineService {
 
         while (somList.contains("*") || somList.contains("/")) {
             int indexOfOperator;
-            if (somList.contains("*") && !somList.contains("/") || somList.contains("*") && somList.indexOf("*") < somList.indexOf("/")) {
+            if (somList.contains("*") && !somList.contains("/")
+                    || somList.contains("*") && somList.indexOf("*") < somList.indexOf("/")) {
                 indexOfOperator = somList.indexOf("*");
                 somList.set(indexOfOperator - 1, "" + Double.parseDouble(somList.get(indexOfOperator - 1)) * Double.parseDouble(somList.get(indexOfOperator + 1)));
             } else {
@@ -73,8 +82,16 @@ class RekenmachineService {
             somList.remove(indexOfOperator + 1);
             somList.remove(indexOfOperator);
         }
+        try {
+            return Double.parseDouble(somList.get(0));
 
-        return Double.parseDouble(somList.get(0));
+        } catch (NumberFormatException dubbelePunten) {
+            System.out.println("Een getal bevatte meerdere punten.");
+        } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
+            System.out.println("Uw som mist één  of meerdere operators en/of getallen.");
+        }
+
+        return 0;
     }
 
     public String wiskunde(String getal, char berekening) {

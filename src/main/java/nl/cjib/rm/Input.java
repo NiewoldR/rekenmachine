@@ -32,18 +32,19 @@ public class Input {
 
             } else {
                 try {
-                    if (vallideInvoer(somInvoer).length() > 0) {
-                        throw new Exception("Illegale invoer, uw som: " + somInvoer + " bevat de volgende illegale charater(s): " + vallideInvoer(somInvoer));
-                    }
+                    vallideInvoer(somInvoer);
 
                     double uitkomst = rekenmachineService.som(somInvoerVerwerken(somInvoer));
                     System.out.println(uitkomst);
                     rekenmachineService.addHistorieUitkomst(uitkomst);
 
 
-                } catch (Exception e) {
-                    System.out.println(e.getMessage() + " Voer uw som opnieuw in:");
+                } catch (NumberFormatException | IndexOutOfBoundsException illegaalGetal) {
+                    System.out.println(illegaalGetal.getMessage() +" Check uw invoer: " + somInvoer + " en voer uw som opnieuw in:");
+                } catch (IllegalArgumentException illegaleInvoer) {
+                    System.out.println(illegaleInvoer.getMessage() + " " + somInvoer + " Voer uw som opnieuw in:");
                 }
+
 
             }
             somInvoer = invoerOmzettenInSom();
@@ -90,10 +91,16 @@ public class Input {
                     tempGetal.append(tempChar);
                 }
             } else if (tempChar == 'w' || tempChar == 's' || tempChar == 'c' || tempChar == 't') {
-                String wiskundeUitkomst = rekenmachineService.wiskunde(tempGetal.toString(), tempChar);
-                tempGetal = new StringBuilder();
-                tempGetal.append(wiskundeUitkomst);
+                try {
 
+
+                    String wiskundeUitkomst = rekenmachineService.wiskunde(tempGetal.toString(), tempChar);
+                    tempGetal = new StringBuilder();
+                    tempGetal.append(wiskundeUitkomst);
+                }
+                catch (IllegalArgumentException foutInWiskunde){
+                    System.out.println("Operator mist een getal, zorg dat er een getal voor deze operator staat");
+                }
             } else if (tempChar == '(') {
                 somList.add(som.substring(i, i + 1));
             } else {
@@ -115,13 +122,19 @@ public class Input {
 
     }
 
-    private String vallideInvoer(String som) {
-        return som.replaceAll("[0-9wsct^*/+()\\-.]", "");
+    private void vallideInvoer(String somInvoer) {
+
+        String illegaleInvoer = somInvoer.replaceAll("[0-9wsct^*/+()\\-.]", "");
+
+        if (!illegaleInvoer.isEmpty()) {
+            throw new IllegalArgumentException("Illegale invoer: " + illegaleInvoer );
+
+        }
 
     }
 
-
 }
+
 
 
 
