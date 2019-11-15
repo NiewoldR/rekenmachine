@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public
-class RekenmachineService {
+public class RekenmachineService {
 
 
     private RekenmachineRepository rekenmachineRepository;
@@ -33,8 +32,7 @@ class RekenmachineService {
             for (int i = startpunt + 1; i < eindpunt; i++) {
                 somTussenHaakjes.add(somList.get(i));
             }
-                somList.subList(startpunt + 1, eindpunt + 1).clear();
-
+            somList.subList(startpunt + 1, eindpunt + 1).clear();
 
 
             somList.set(startpunt, "" + som(somTussenHaakjes));
@@ -47,10 +45,14 @@ class RekenmachineService {
 
         while (somList.contains("^")) {
             int indexOfOperator = somList.indexOf("^");
-            somList.set(indexOfOperator - 1, "" + Math.pow(Double.parseDouble(somList.get(indexOfOperator - 1)), Double.parseDouble(somList.get(indexOfOperator + 1))));
+            try {
+                somList.set(indexOfOperator - 1, "" + Math.pow(Double.parseDouble(somList.get(indexOfOperator - 1)), Double.parseDouble(somList.get(indexOfOperator + 1))));
 
-            somList.remove(indexOfOperator + 1);
-            somList.remove(indexOfOperator);
+                somList.remove(indexOfOperator + 1);
+                somList.remove(indexOfOperator);
+            } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
+                throw new IndexOutOfBoundsException("Uw som mist één  of meerdere operators en/of getallen.");
+            }
         }
 
         while (somList.contains("*") || somList.contains("/")) {
@@ -58,24 +60,52 @@ class RekenmachineService {
             if (somList.contains("*") && !somList.contains("/")
                     || somList.contains("*") && somList.indexOf("*") < somList.indexOf("/")) {
                 indexOfOperator = somList.indexOf("*");
-                somList.set(indexOfOperator - 1, "" + Double.parseDouble(somList.get(indexOfOperator - 1)) * Double.parseDouble(somList.get(indexOfOperator + 1)));
+                try {
+
+
+                    somList.set(indexOfOperator - 1, "" + Double.parseDouble(somList.get(indexOfOperator - 1)) *
+                            Double.parseDouble(somList.get(indexOfOperator + 1)));
+                } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
+                    throw new IndexOutOfBoundsException("Uw som mist één  of meerdere operators en/of getallen.");
+                }
             } else {
                 indexOfOperator = somList.indexOf("/");
-                somList.set(indexOfOperator - 1, "" + Double.parseDouble(somList.get(indexOfOperator - 1)) / Double.parseDouble(somList.get(indexOfOperator + 1)));
+                try {
+                    if (somList.get(indexOfOperator + 1).equals("0")) {
+                        throw new IllegalArgumentException("Delen door nul is niet mogelijk");
+                    }
+
+                    somList.set(indexOfOperator - 1, "" + Double.parseDouble(somList.get(indexOfOperator - 1)) /
+                            Double.parseDouble(somList.get(indexOfOperator + 1)));
+                } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
+                    throw new IndexOutOfBoundsException("Uw som mist één  of meerdere operators en/of getallen.");
+                } catch (RuntimeException delenDoorNul) {
+                    throw new IllegalArgumentException(delenDoorNul.getMessage());
+                }
 
             }
             somList.remove(indexOfOperator + 1);
             somList.remove(indexOfOperator);
+
         }
 
         while (somList.contains("+") || somList.contains("-")) {
             int indexOfOperator;
             if (somList.contains("+") && !somList.contains("-") || somList.contains("+") && somList.indexOf("+") < somList.indexOf("-")) {
                 indexOfOperator = somList.indexOf("+");
-                somList.set(indexOfOperator - 1, "" + (Double.parseDouble(somList.get(indexOfOperator - 1)) + Double.parseDouble(somList.get(indexOfOperator + 1))));
+                try {
+                    somList.set(indexOfOperator - 1, "" + (Double.parseDouble(somList.get(indexOfOperator - 1)) + Double.parseDouble(somList.get(indexOfOperator + 1))));
+                } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
+                    throw new IndexOutOfBoundsException("Uw som mist één  of meerdere operators en/of getallen.");
+                }
             } else {
                 indexOfOperator = somList.indexOf("-");
-                somList.set(indexOfOperator - 1, "" + (Double.parseDouble(somList.get(indexOfOperator - 1)) - Double.parseDouble(somList.get(indexOfOperator + 1))));
+                try {
+                    somList.set(indexOfOperator - 1, "" + (Double.parseDouble(somList.get(indexOfOperator - 1)) -
+                            Double.parseDouble(somList.get(indexOfOperator + 1))));
+                } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
+                    throw new IndexOutOfBoundsException("Uw som mist één  of meerdere operators en/of getallen.");
+                }
 
             }
 
@@ -86,12 +116,8 @@ class RekenmachineService {
             return Double.parseDouble(somList.get(0));
 
         } catch (NumberFormatException dubbelePunten) {
-            System.out.println("Een getal bevatte meerdere punten.");
-        } catch (IndexOutOfBoundsException ontbrekendeWaarde) {
-            System.out.println("Uw som mist één  of meerdere operators en/of getallen.");
+            throw new NumberFormatException("Een getal bevatte meerdere punten.");
         }
-
-        return 0;
     }
 
     public String wiskunde(String getal, char berekening) {
@@ -115,13 +141,10 @@ class RekenmachineService {
         return rekenmachineRepository.getHistorie();
     }
 
-    public void addHistorieSom(String som) {
-        rekenmachineRepository.addHistorieSom(som);
+    public void addHistorieSom(String som, double uitkomst) {
+        rekenmachineRepository.addHistorieSom(som, uitkomst);
     }
 
-    public void addHistorieUitkomst(double uitkomst) {
-        rekenmachineRepository.addHistorieUitkomst(uitkomst);
-    }
 
     public double getLaatsteUitkomst() {
         return rekenmachineRepository.getLaatsteUitkomst();

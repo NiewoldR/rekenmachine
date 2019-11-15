@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class BerekeningServiceTest {
+class RekenmachineServiceTest {
 
     private RekenmachineService rekenmachineService;
     private List<String> somList;
@@ -60,6 +59,15 @@ class BerekeningServiceTest {
         double deling = rekenmachineService.som(somList);
 
         assertThat(deling).isEqualTo(3.0);
+    }
+
+    @Test
+    void powerNumbersTest() {
+        somList.add(1, "^");
+
+        double macht = rekenmachineService.som(somList);
+
+        assertThat(macht).isEqualTo(36.0);
     }
 
 

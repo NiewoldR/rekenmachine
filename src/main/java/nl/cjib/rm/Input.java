@@ -1,6 +1,7 @@
 package nl.cjib.rm;
 
 import nl.cjib.rm.service.RekenmachineService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,12 +12,13 @@ import java.util.Scanner;
 public class Input {
 
     private RekenmachineService rekenmachineService;
+    private Scanner scanner;
 
-    public Input(RekenmachineService rekenmachineService) {
+    @Autowired
+    public Input(RekenmachineService rekenmachineService, Scanner scanner) {
         this.rekenmachineService = rekenmachineService;
+        this.scanner = scanner;
     }
-
-    private Scanner scanner = new Scanner(System.in);
 
 
     String rekenmachine() {
@@ -36,11 +38,11 @@ public class Input {
 
                     double uitkomst = rekenmachineService.som(somInvoerVerwerken(somInvoer));
                     System.out.println(uitkomst);
-                    rekenmachineService.addHistorieUitkomst(uitkomst);
+                    rekenmachineService.addHistorieSom(somInvoer, uitkomst);
 
 
                 } catch (NumberFormatException | IndexOutOfBoundsException illegaalGetal) {
-                    System.out.println(illegaalGetal.getMessage() +" Check uw invoer: " + somInvoer + " en voer uw som opnieuw in:");
+                    System.out.println(illegaalGetal.getMessage() + " Check uw invoer: " + somInvoer + " en voer uw som opnieuw in:");
                 } catch (IllegalArgumentException illegaleInvoer) {
                     System.out.println(illegaleInvoer.getMessage() + " " + somInvoer + " Voer uw som opnieuw in:");
                 }
@@ -92,13 +94,10 @@ public class Input {
                 }
             } else if (tempChar == 'w' || tempChar == 's' || tempChar == 'c' || tempChar == 't') {
                 try {
-
-
                     String wiskundeUitkomst = rekenmachineService.wiskunde(tempGetal.toString(), tempChar);
                     tempGetal = new StringBuilder();
                     tempGetal.append(wiskundeUitkomst);
-                }
-                catch (IllegalArgumentException foutInWiskunde){
+                } catch (IllegalArgumentException foutInWiskunde) {
                     System.out.println("Operator mist een getal, zorg dat er een getal voor deze operator staat");
                 }
             } else if (tempChar == '(') {
@@ -112,7 +111,6 @@ public class Input {
             }
 
         }
-        rekenmachineService.addHistorieSom(som);
         if (tempGetal.length() > 0) {
             somList.add(tempGetal.toString());
         }
@@ -127,7 +125,7 @@ public class Input {
         String illegaleInvoer = somInvoer.replaceAll("[0-9wsct^*/+()\\-.]", "");
 
         if (!illegaleInvoer.isEmpty()) {
-            throw new IllegalArgumentException("Illegale invoer: " + illegaleInvoer );
+            throw new IllegalArgumentException("Illegale invoer: " + illegaleInvoer);
 
         }
 

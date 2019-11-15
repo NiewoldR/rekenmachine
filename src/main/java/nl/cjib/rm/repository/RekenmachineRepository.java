@@ -14,35 +14,32 @@ public class RekenmachineRepository {
             List.of("Operators:",
                     "+: optellen(getal 1 + getal 2)",
                     "-: aftrekken(getal 1 - getal 2)",
-                    "*: vermedigvuldigen(getal 1 * getal 2)",
+                    "*: vermenigvuldigen(getal 1 * getal 2)",
                     "/: delen(getal 1 / getal 2)",
                     "^: machten(getal 1 ^ getal 2)",
                     "w: wortel(Getal 1 w)",
-                    "w: sinus(Getal 1 s)",
-                    "w: tangus(Getal 1 t)",
-                    "w: Cosinus(Getal 1 c)\n",
+                    "s: sinus(Getal 1 s)",
+                    "t: tangus(Getal 1 t)",
+                    "c: cosinus(Getal 1 c)\n",
                     "Speciale getallen:",
                     "memory: laatste getal berekend",
                     "pi: pi",
                     "euler: getal van Euler\n",
-                    "Speciale inoer:",
+                    "Speciale invoer:",
                     "historie: bekijk alle eerder ingevoerde sommen en resultaten",
                     "stop: sluit de applicatie af"
             );
 
 
-    public void addHistorieSom(String som) {
+    public void addHistorieSom(String som, double uitkomst) {
         historieSom.add(som);
-    }
-
-    public void addHistorieUitkomst(double uitkomst) {
         historieUitkomst.add(uitkomst);
     }
 
     public List<String> getHistorie() {
         List<String> getHistorie = new ArrayList<>();
         for (int i = 0; historieUitkomst.size() > i; i++) {
-            getHistorie.add(historieSom.get(i) + " = " + historieUitkomst.get(i) );
+            getHistorie.add(historieSom.get(i) + " = " + historieUitkomst.get(i));
         }
         return getHistorie;
     }
