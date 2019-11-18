@@ -1,9 +1,12 @@
 package nl.cjib.rm;
 
+import nl.cjib.rm.repository.Historie;
 import nl.cjib.rm.service.RekenmachineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,13 +14,19 @@ import java.util.Scanner;
 @Component
 public class Input {
 
+
+    @Value("${somInvoerTekst}")
+    private String somInvoerTekst;
     private RekenmachineService rekenmachineService;
     private Scanner scanner;
+    private PrintStream printStream;
+
 
     @Autowired
-    public Input(RekenmachineService rekenmachineService, Scanner scanner) {
+    public Input(RekenmachineService rekenmachineService, Scanner scanner, PrintStream printStream) {
         this.rekenmachineService = rekenmachineService;
         this.scanner = scanner;
+        this.printStream = printStream;
     }
 
 
@@ -27,9 +36,9 @@ public class Input {
 
         while (!somInvoer.equals("stop")) {
             if (somInvoer.equals("historie")) {
-                System.out.println(String.join("\n", rekenmachineService.getHistorie()));
+                printStream.println(String.join("\n", rekenmachineService.getHistorie()));
             } else if (somInvoer.equals("help")) {
-                System.out.println(String.join("\n", rekenmachineService.getHelp()));
+                printStream.println(String.join("\n", getHelp()));
 
 
             } else {
@@ -37,14 +46,14 @@ public class Input {
                     vallideInvoer(somInvoer);
 
                     double uitkomst = rekenmachineService.som(somInvoerVerwerken(somInvoer));
-                    System.out.println(uitkomst);
+                    printStream.println(uitkomst);
                     rekenmachineService.addHistorieSom(somInvoer, uitkomst);
 
 
                 } catch (NumberFormatException | IndexOutOfBoundsException illegaalGetal) {
-                    System.out.println(illegaalGetal.getMessage() + " Check uw invoer: " + somInvoer + " en voer uw som opnieuw in:");
+                    printStream.println(illegaalGetal.getMessage() + " Check uw invoer: " + somInvoer + " en voer uw som opnieuw in:");
                 } catch (IllegalArgumentException illegaleInvoer) {
-                    System.out.println(illegaleInvoer.getMessage() + " " + somInvoer + " Voer uw som opnieuw in:");
+                    printStream.println(illegaleInvoer.getMessage() + " " + somInvoer + " Voer uw som opnieuw in:");
                 }
 
 
@@ -56,7 +65,7 @@ public class Input {
 
     private String invoerOmzettenInSom() {
 
-        System.out.print("Voer uw som in: ");
+        printStream.print(somInvoerTekst);
 
         return scanner.nextLine()
                 .toLowerCase()
@@ -98,7 +107,7 @@ public class Input {
                     tempGetal = new StringBuilder();
                     tempGetal.append(wiskundeUitkomst);
                 } catch (IllegalArgumentException foutInWiskunde) {
-                    System.out.println("Operator mist een getal, zorg dat er een getal voor deze operator staat");
+                    printStream.println("Operator mist een getal, zorg dat er een getal voor deze operator staat");
                 }
             } else if (tempChar == '(') {
                 somList.add(som.substring(i, i + 1));
@@ -131,7 +140,29 @@ public class Input {
 
     }
 
+    public List<String> getHelp() {
+        return List.of("Operators:",
+                "+: optellen(getal 1 + getal 2)",
+                "-: aftrekken(getal 1 - getal 2)",
+                "*: vermenigvuldigen(getal 1 * getal 2)",
+                "/: delen(getal 1 / getal 2)",
+                "^: machten(getal 1 ^ getal 2)",
+                "w: wortel(Getal 1 w)",
+                "s: sinus(Getal 1 s)",
+                "t: tangus(Getal 1 t)",
+                "c: cosinus(Getal 1 c)\n",
+                "Speciale getallen:",
+                "memory: laatste getal berekend",
+                "pi: pi",
+                "euler: getal van Euler\n",
+                "Speciale invoer:",
+                "historie: bekijk alle eerder ingevoerde sommen en resultaten",
+                "stop: sluit de applicatie af"
+        );
+    }
 }
+
+
 
 
 

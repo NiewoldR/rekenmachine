@@ -1,5 +1,6 @@
 package nl.cjib.rm.service;
 
+import nl.cjib.rm.repository.Historie;
 import nl.cjib.rm.repository.RekenmachineRepository;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +11,10 @@ import java.util.List;
 public class RekenmachineService {
 
 
-    private RekenmachineRepository rekenmachineRepository;
+    private Historie historie;
 
-    RekenmachineService(RekenmachineRepository rekenmachineRepository) {
-        this.rekenmachineRepository = rekenmachineRepository;
+    RekenmachineService(Historie historie) {
+        this.historie = historie;
     }
 
 
@@ -138,21 +139,19 @@ public class RekenmachineService {
     }
 
     public List<String> getHistorie() {
-        return rekenmachineRepository.getHistorie();
+        return historie.getHistorie();
     }
 
     public void addHistorieSom(String som, double uitkomst) {
-        rekenmachineRepository.addHistorieSom(som, uitkomst);
+        historie.addHistorieSom(som, uitkomst);
     }
 
 
     public double getLaatsteUitkomst() {
-        return rekenmachineRepository.getLaatsteUitkomst();
+        return historie.getLaatsteUitkomst();
     }
 
-    public List<String> getHelp() {
-        return rekenmachineRepository.getHelp();
-    }
+
 
 }
 
