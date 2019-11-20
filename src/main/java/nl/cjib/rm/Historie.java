@@ -1,4 +1,4 @@
-package nl.cjib.rm.repository;
+package nl.cjib.rm;
 
 import java.util.List;
 

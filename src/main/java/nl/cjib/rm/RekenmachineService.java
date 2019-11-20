@@ -1,7 +1,6 @@
-package nl.cjib.rm.service;
+package nl.cjib.rm;
 
-import nl.cjib.rm.repository.Historie;
-import nl.cjib.rm.repository.RekenmachineRepository;
+import nl.cjib.rm.Historie;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

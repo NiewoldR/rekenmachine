@@ -1,7 +1,5 @@
 package nl.cjib.rm;
 
-import nl.cjib.rm.repository.Historie;
-import nl.cjib.rm.service.RekenmachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
