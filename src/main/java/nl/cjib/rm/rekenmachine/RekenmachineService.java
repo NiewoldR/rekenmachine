@@ -1,6 +1,5 @@
-package nl.cjib.rm;
+package nl.cjib.rm.rekenmachine;
 
-import nl.cjib.rm.Historie;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -137,16 +136,16 @@ public class RekenmachineService {
         }
     }
 
-    public List<String> getHistorie() {
+    List<String> getHistorie() {
         return historie.getHistorie();
     }
 
-    public void addHistorieSom(String som, double uitkomst) {
+    void addHistorieSom(String som, double uitkomst) {
         historie.addHistorieSom(som, uitkomst);
     }
 
 
-    public double getLaatsteUitkomst() {
+    double getLaatsteUitkomst() {
         return historie.getLaatsteUitkomst();
     }
 

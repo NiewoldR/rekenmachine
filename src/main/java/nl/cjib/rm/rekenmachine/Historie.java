@@ -1,4 +1,4 @@
-package nl.cjib.rm;
+package nl.cjib.rm.rekenmachine;
 
 import java.util.List;
 

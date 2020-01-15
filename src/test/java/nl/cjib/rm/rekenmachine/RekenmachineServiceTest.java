@@ -1,7 +1,5 @@
-package nl.cjib.rm;
+package nl.cjib.rm.rekenmachine;
 
-import nl.cjib.rm.RekenmachineRepository;
-import nl.cjib.rm.RekenmachineService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

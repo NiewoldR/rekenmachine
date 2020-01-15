@@ -1,6 +1,5 @@
-package nl.cjib.rm;
+package nl.cjib.rm.rekenmachine;
 
-import nl.cjib.rm.RekenmachineRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

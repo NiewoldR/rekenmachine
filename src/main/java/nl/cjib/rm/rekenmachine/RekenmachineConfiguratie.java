@@ -1,4 +1,4 @@
-package nl.cjib.rm;
+package nl.cjib.rm.rekenmachine;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

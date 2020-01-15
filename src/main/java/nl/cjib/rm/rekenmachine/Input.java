@@ -1,4 +1,4 @@
-package nl.cjib.rm;
+package nl.cjib.rm.rekenmachine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
